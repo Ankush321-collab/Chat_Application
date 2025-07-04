@@ -47,6 +47,12 @@ const handlelogin=async ()=>{
         withCredentials:true,
       }
     );
+    // Print the current logged-in user's id, firstname, and email
+    console.log("Logged in user:", {
+      id: data.user._id,
+      firstname: data.user.firstname,
+      email: data.user.email
+    });
 
     toast.success(`welcome back ${data.user.firstname}`)
     localStorage.setItem("user",JSON.stringify(data.user))
@@ -56,10 +62,10 @@ const handlelogin=async ()=>{
 
   }
   catch(error){
-    const msg=error?.response?.data?.errors ||"login failed"
+    // Use backend 'message' field for error display
+    const msg = error?.response?.data?.message || "login failed";
     seterror(msg);
-    toast.error("login failed")
-
+    toast.error(msg);
   }
 
   finally{
