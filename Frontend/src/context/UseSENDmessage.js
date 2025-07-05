@@ -13,7 +13,7 @@ const UseSENDmessage = () => {
     setLoading(true);
     try {
       await axios.post(
-        `http://localhost:5000/api/send/${selectedconvo._id}`,
+        `http://localhost:5000/api/message/send/${selectedconvo._id}`,
         { message: text },
         { withCredentials: true }
       );

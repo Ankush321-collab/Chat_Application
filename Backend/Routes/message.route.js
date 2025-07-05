@@ -4,8 +4,8 @@ import { sendmessage,getmessage } from '../Controller/message.controller.js';
 
 
 const router = express.Router();
-router.post('/send/:id',secureroute,sendmessage)
-router.get('/get/:id',secureroute,getmessage)
+router.post('/message/send/:id',secureroute,sendmessage)
+router.get('/message/get/:id',secureroute,getmessage)
 
 
 

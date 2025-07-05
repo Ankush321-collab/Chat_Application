@@ -14,7 +14,7 @@ const useGetMessage = (refresh) => {
 
       setLoading(true);
       try {
-        const res = await axios.get(`http://localhost:5000/api/get/${selectedconvo._id}`, {
+        const res = await axios.get(`http://localhost:5000/api/message/get/${selectedconvo._id}`, {
           withCredentials: true,
         });
         setMessages(res.data);

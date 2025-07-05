@@ -2,90 +2,75 @@ import React, { useState } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import axios from 'axios'
-import {toast} from 'react-toastify'
+import { toast } from 'react-toastify'
 import { Link, useNavigate } from 'react-router-dom'
 
-
-
 const Login = () => {
+  const [loading, setloading] = useState(false)
+  const [error, seterror] = useState("");
+  const [showpass, setshowpass] = useState(false);
+  const [, setauth] = useAuth();
 
-  const [loading,setloading]=useState(false)
-  const [error,seterror]=useState("");
-  const [showpass,setshowpass]=useState(false);
-  const[,setauth]=useAuth();
-
-  const [formdata,setformdata]=useState
-  ({
-    email:"",
-    password:""
+  const [formdata, setformdata] = useState({
+    email: "",
+    password: ""
   })
 
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
-const handlechange=(e)=>{
-  const value=e.target.value
-  const name=e.target.name
-
-  setformdata({
-    ...formdata,
-    [name]:value,
-
-  })
-}
-
-const handlelogin=async ()=>{
-  setloading(true);
-  seterror("")
-
-  try{
-    const {data}=await axios.post(
-      "http://localhost:5000/api/login",
-      {
-        email:formdata.email,
-        password:formdata.password
-      },{
-        withCredentials:true,
-      }
-    );
-    // Print the current logged-in user's id, firstname, and email
-    console.log("Logged in user:", {
-      id: data.user._id,
-      firstname: data.user.firstname,
-      email: data.user.email
-    });
-
-    toast.success(`welcome back ${data.user.firstname}`)
-    localStorage.setItem("user",JSON.stringify(data.user))
-    localStorage.setItem("token",data.token);
-    setauth(data.user);
-    navigate('/')
-
-  }
-  catch(error){
-    // Use backend 'message' field for error display
-    const msg = error?.response?.data?.message || "login failed";
-    seterror(msg);
-    toast.error(msg);
+  const handlechange = (e) => {
+    const value = e.target.value
+    const name = e.target.name
+    setformdata({
+      ...formdata,
+      [name]: value,
+    })
   }
 
-  finally{
+  const handlelogin = async () => {
+    setloading(true);
+    seterror("")
 
-    setloading(false)
+    try {
+      const { data } = await axios.post(
+        "http://localhost:5000/api/login",
+        {
+          email: formdata.email,
+          password: formdata.password
+        }, {
+          withCredentials: true,
+        }
+      );
+      console.log("Logged in user:", {
+        id: data.user._id,
+        firstname: data.user.firstname,
+        email: data.user.email
+      });
+
+      toast.success(`Welcome back ${data.user.firstname}`)
+      localStorage.setItem("user", JSON.stringify(data.user))
+      localStorage.setItem("token", data.token);
+      setauth(data.user);
+      navigate('/')
+    } catch (error) {
+      const msg = error?.response?.data?.message || "Login failed";
+      seterror(msg);
+      toast.error(msg);
+    } finally {
+      setloading(false)
+    }
   }
-
-}
 
   return (
-    <div className='bg-black min-h-screen w-full flex items-center justify-center px-4'>
-      <div className='bg-gradient-to-b from-[#1e1e1e] to-[#121212] text-white w-full max-w-md rounded-2xl p-8 shadow-xl border-gray-800'>
-        <h1 className='text-3xl font-poppins font-bold text-center mb-8 bg-gradient-to-r from-[#7a6ff0] to-[#5e8bff] bg-clip-text text-transparent'>Login to your account</h1>
-
-        {/* First Name */}
-        
+    <div className='min-h-screen w-full flex items-center justify-center px-4 py-8 bg-gradient-to-br from-black via-gray-900 to-black'>
+      <div className='bg-gradient-to-b from-[#1e1e1e] to-[#121212] text-white w-full max-w-md rounded-3xl p-6 sm:p-8 shadow-2xl border border-gray-800 transform-gpu transition-all duration-300 hover:scale-105'>
+        <h1 className='text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 bg-gradient-to-r from-[#7a6ff0] to-[#5e8bff] bg-clip-text text-transparent'>
+          Login to your account
+        </h1>
 
         {/* Email */}
-        <div className='mb-4'>
-          <label className='font-poppins block text-sm font-medium text-gray-300 mb-1'>
+        <div className='mb-4 sm:mb-6'>
+          <label className='block text-sm font-medium text-gray-300 mb-2'>
             Email
           </label>
           <input
@@ -93,63 +78,55 @@ const handlelogin=async ()=>{
             value={formdata.email}
             onChange={handlechange}
             type="email"
-            placeholder="Type here"
-            className="font-poppins input input-bordered input-primary w-full max-w-xs"
+            placeholder="Enter your email"
+            className="w-full h-12 px-4 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-md"
           />
         </div>
 
         {/* Password */}
-        <div className='mb-4'>
-          <label className='font-poppins block text-sm font-medium text-gray-300 mb-1'>
+        <div className='mb-6 sm:mb-8'>
+          <label className='block text-sm font-medium text-gray-300 mb-2'>
             Password
           </label>
-          <div className="relative w-full max-w-xs">
+          <div className="relative">
             <input
               name="password"
               value={formdata.password}
               onChange={handlechange}
               type={showpass ? "text" : "password"}
-              placeholder="Type here"
-              className="input input-bordered input-primary w-full pr-10"
+              placeholder="Enter your password"
+              className="w-full h-12 px-4 pr-12 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-md"
             />
             <button
               type="button"
-              className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors duration-200"
               onClick={() => setshowpass(!showpass)}
             >
-              {showpass ? <EyeOffIcon size={20} /> : <Eye size={20} />}
+              {showpass ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
         </div>
 
-       
-
-        {/* Signup button */}
-        <div className='flex items-center justify-center'>
+        {/* Login button */}
+        <div className='mb-6'>
           <button
             onClick={handlelogin}
-            className="btn glass"
             disabled={loading}
+            className="w-full h-12 rounded-xl bg-gradient-to-r from-[#7a6ff0] to-[#5e8bff] text-white font-semibold shadow-lg transform-gpu transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
           >
-            {loading ? "loginging..." : "login"}
+            {loading ? "Signing in..." : "Sign In"}
           </button>
         </div>
-         {/* links */}
-        <div className='mt-6 text-center text-sm text-gray-400'>
-          Dont't have an account?{' '}
+
+        {/* Links */}
+        <div className='text-center text-sm text-gray-400'>
+          Don't have an account?{' '}
           <Link 
             to={'/signup'} 
-            className='text-[#7a6ff0] font-medium hover:underline'
+            className='text-[#7a6ff0] font-medium hover:underline transition-colors duration-200'
           >
-            signup
+            Sign up
           </Link>
-        </div>
-
-        {/* divider */}
-        <div className='flex items-center my-6'>
-          <div className='flex-grow border-t border-gray-700'></div>
-     
-          <div className='flex-grow border-t border-gray-700'></div>
         </div>
       </div>
     </div>

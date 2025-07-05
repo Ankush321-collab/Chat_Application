@@ -23,6 +23,9 @@ const UserSchema = new mongoose.Schema({
     minlength: 6,
     select: false, // Hides password from queries unless explicitly selected
   },
+  
+},{
+  timestamps:true
 });
 
 // Optional: pre-save hook to hash password — but you're doing it in controller

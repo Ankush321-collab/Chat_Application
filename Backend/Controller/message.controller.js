@@ -52,7 +52,13 @@ export const getmessage = async (req, res) => {
 
     const conversation = await Conversation.findOne({
       members: { $all: [senderid, receiverid] },
-    }).populate("messages");
+    }).populate({
+      path: "messages",
+      populate: {
+        path: "senderid",
+        select: "_id firstname lastname email"
+      }
+    });
 
     if (!conversation) {
       return res.status(200).json([]);

@@ -5,21 +5,22 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import userroutes from './Routes/user.route.js';
 import messageroute from './Routes/message.route.js'
+import { app, io, server } from './socket/server.js'
 dotenv.config();
 
-const app = express();
+
 app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
+  origin: process.env.FRONTEND_URL || "http://localhost:5173",
   credentials: true
 }));
 
 app.use('/api', userroutes);
 app.use('/api',messageroute);
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT
 
 try {
   await mongoose.connect(process.env.MONGO_URI, {
@@ -28,7 +29,8 @@ try {
   });
   console.log('✅ Connected to MongoDB');
 
-  app.listen(port, () => {
+  server.listen(port, () => {
+    
     console.log(`🚀 Server listening at http://localhost:${port}`);
   });
 } catch (error) {
