@@ -1,4 +1,4 @@
-# ChatApp(bAckup) (MERN Stack)
+# ChatApp(BAckup) (MERN Stack)
 
 A modern, responsive real-time chat application built with the MERN stack.
 
